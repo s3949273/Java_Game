@@ -11,7 +11,7 @@ import java.util.Scanner;
         enemy lores:
             tintansan's legacy
         enemy loot drops;
-        
+        new tests
     IN PROGRESS:
         stringify method
         setSave()
