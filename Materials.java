@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-/*public class Materials {
+public class Materials {
     public class Iron{
         int units;
         String name = "Iron";
@@ -68,5 +68,3 @@ import java.util.Scanner;
     }
 
 }
-
-*/
