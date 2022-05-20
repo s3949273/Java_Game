@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.Scanner;
 /**
  *  Equipment: (equipment will have a boolean (equipped or not), another boolean correct class)
@@ -261,7 +262,13 @@ public class Game{
               User.Equipment equipment = user.new Equipment();
               User.Equipment.Weapons weapons = equipment.new Weapons();
               User.Equipment.Weapons.Sword s = weapons.new Sword("Common Iron Sword");
-              
+              s.equip();
+              ArrayList<Object> AE = user.activeEquipment;
+              for(int i =0; i<AE.size(); i++){
+                     if(AE.get(i) instanceof User.Equipment.Weapons){
+                            System.out.println("hi");
+                     }
+              }
        }
 
 }

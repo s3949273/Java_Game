@@ -77,9 +77,13 @@ public class User {
     public static void setSave(String filepath, HashMap<String, Double>a){
         File file = new File(filepath);
         String toWrite = a.toString();
+        String tooWrite = stringify();
         try{
+
             FileWriter fw = new FileWriter(file);
-            fw.write(toWrite);
+            fw.write(toWrite +"\n");
+            //create a new line and then append the inventory
+            fw.append(tooWrite);
             fw.close();
             System.out.println("successfully wrote to file and closed the filewriter");
         }catch(Exception e){
@@ -417,6 +421,7 @@ public class User {
                 ret += ", ";
             }
         } 
+        ret+="}\n{";
         for(int i = 0; i<activeEquipment.size(); i++){
             Object curObj = activeEquipment.get(i);
             if(curObj instanceof Equipment.Weapons.Bow){
@@ -546,6 +551,7 @@ public class User {
     }
     public User fight(Enemies a){
         if(a.get("speed")<get("speed")){
+            
             //if the user's speed is faster than the monster's speed...
             while(a.get("health")>0 && get("health")>0){
                 long timeNow = System.currentTimeMillis();
@@ -610,7 +616,6 @@ public class User {
         //System.out.println(timeNow);
         long timeaffected = timeNow+seconds*1000;
         addTo("attack", damage);
-        //System.out.println(timeaffected);
         while(timeNow < timeaffected){
             try{
                 Thread.sleep(1000);
@@ -619,18 +624,21 @@ public class User {
                 e.printStackTrace();
             }
         }
+        //the dot has been on for x amount of time, it has finished it's duration, lets end it now.
+        takeAwayFrom("attack", damage);
         //done
     }
-    public boolean contains(Enum a , String b){
-        
-        return false;
-    }
+    //probably don't need the method below for a while
+    // public boolean contains(Enum a , String b){
+    
+    //     return false;
+    // }
     public void setDotType(int a){
         //set dots to the stats
         stats.put("dot", (double)a);
 
     }
-    public DotType gDotType(){
+    public DotType getDotType(){
         DotType ret = DotType.NONE;
         if(get("dot") == 0){
             ret = DotType.NONE;
@@ -1666,7 +1674,7 @@ public class User {
                     if(DOTenabled){
                         int dotType = rand.nextInt(4);
                         setDotType(dotType);
-                        dType = gDotType();
+                        dType = getDotType();
                         DOT = dType.toString();
                     }
                     if(hasCC){
