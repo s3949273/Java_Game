@@ -55,8 +55,9 @@ public class Enemies {
         }
         public static class Slime{
             public Slime(){
-                monsterStats.put("health", 10.0);
-                monsterStats.put("attack", 1.0);
+                //for testing purposes
+                monsterStats.put("health", 100000000.0);
+                monsterStats.put("attack", 0.0);
                 monsterStats.put("speed", 1.0);
                 monsterStats.put("givenMoney", 1.0);
                 monsterStats.put("givenExp", 10.0);

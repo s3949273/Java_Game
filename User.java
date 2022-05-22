@@ -1,4 +1,5 @@
 import java.io.File;
+import java.lang.reflect.*;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,18 +7,19 @@ import java.util.Random;
 import java.util.Scanner;
 /*
     TO DO: 
-        DOTs
-        fight method
+       
+        
         enemy lores:
             tintansan's legacy
         enemy loot drops;
         new tests
     IN PROGRESS:
-        stringify method
+        stringify()
         setSave()
         getSave()
         checkNames()
-
+        fight()
+             DOTs
     DONE:
         create stats hashmap
         create inventory
@@ -550,20 +552,30 @@ public class User {
         set("dodge", a.get("dodge"));
     }
     public User fight(Enemies a){
+        Random rand = new Random();
+        int weapInd=-1;
+        String objClass;
+        Boolean hasDot = hasDOT();
         if(a.get("speed")<get("speed")){
-            
             //if the user's speed is faster than the monster's speed...
             while(a.get("health")>0 && get("health")>0){
                 long timeNow = System.currentTimeMillis();
-                //have to check whether the weapon is a DOT enabled weapon i.e. it's dot type is not "None"
-                try{
-                    a.takeAwayFrom("health", get("attack"));
-                    System.out.println("monster health: "+a.get("health"));
-                    takeAwayFrom("health", a.get("attack"));
-                    System.out.println("your health: "+this.get("health"));
-                    Thread.sleep(200);
-                    //attack the monster then the monster attacks you then wait 200 milliseconds before going again
-                }catch(Exception e){
+                if(hasDOT()){
+                    try{
+                        
+                        //activate a dot for 10 seconds, which deals 1000% damage
+                        //sharp people will pick up that the DOT lasts 10 seconds, however each set of attacks only last 400 milliseconds,
+                        // the dot will stack to crazy amounts, usually the dot will not last 10 seconds, just maybe 2, 3 seconds
+                        // and 200% or 300%
+                        a.takeAwayFrom("health", get("attack"));
+                        System.out.println("monster health: "+a.get("health"));
+                        takeAwayFrom("health", a.get("attack"));
+                        System.out.println("your health: "+this.get("health"));
+                        Thread.sleep(200);
+                        //attack the monster then the monster attacks you then wait 200 milliseconds before going again
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
             }
         }else{
@@ -604,35 +616,41 @@ public class User {
             }
         }
     }
-    public void DOT(int seconds, int percDamage){
-        /**DOT == damage over time
-         *  3 types of dots, burns, bleeds and poisons/corrosion.
-         * user can buy potions to protect against specific dots
-         * the dot's damage is based upon a percentage of the user's attack
-         * and it deals damage for seconds amount of time every second...
-         */
-        double damage = (percDamage/100)*get("attack");
-        long timeNow = System.currentTimeMillis();
-        //System.out.println(timeNow);
-        long timeaffected = timeNow+seconds*1000;
-        addTo("attack", damage);
-        while(timeNow < timeaffected){
-            try{
-                Thread.sleep(1000);
-                timeNow = System.currentTimeMillis();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        //the dot has been on for x amount of time, it has finished it's duration, lets end it now.
-        takeAwayFrom("attack", damage);
-        //done
-    }
     //probably don't need the method below for a while
     // public boolean contains(Enum a , String b){
     
     //     return false;
     // }
+    public boolean hasDOT(){
+        if(activeEquipment.get(0) instanceof User.Equipment.Weapons.Sword){
+            Equipment.Weapons.Sword a = (Equipment.Weapons.Sword)activeEquipment.get(0);
+            if(a.getDotType() != DotType.NONE){
+                return true;
+            }
+        }else if(activeEquipment.get(0) instanceof User.Equipment.Weapons.Bow){
+            Equipment.Weapons.Bow a = (Equipment.Weapons.Bow)activeEquipment.get(0);
+            if(a.getDotType() != DotType.NONE){
+                return true;
+            }
+        }else if(activeEquipment.get(0) instanceof User.Equipment.Weapons.Gun){
+            Equipment.Weapons.Gun a = (Equipment.Weapons.Gun)activeEquipment.get(0);
+            if(a.getDotType() != DotType.NONE){
+                return true;
+            }
+        }else if(activeEquipment.get(0) instanceof User.Equipment.Weapons.lance){
+            Equipment.Weapons.lance a = (Equipment.Weapons.lance)activeEquipment.get(0);
+            if(a.getDotType() != DotType.NONE){
+                return true;
+            }
+        }
+        else if(activeEquipment.get(0) instanceof User.Equipment.Weapons.Staff){
+            Equipment.Weapons.Sword a = (Equipment.Weapons.Sword)activeEquipment.get(0);
+            if(a.getDotType() != DotType.NONE){
+                return true;
+            }
+        }
+        return false;
+    }
     public void setDotType(int a){
         //set dots to the stats
         stats.put("dot", (double)a);
@@ -664,7 +682,39 @@ public class User {
         double moneyMade= iron.sell();
         addTo("money", moneyMade);
     }
+    public Equipment.Weapons.Sword castSword(Object a){
+        Equipment.Weapons.Sword ret = (Equipment.Weapons.Sword)a;
+        return ret;
+    }
+    public Equipment.Weapons.Bow castBow(Object a){
+        Equipment.Weapons.Bow ret = (Equipment.Weapons.Bow)a;
+        return ret;
+    }
+    public Equipment.Weapons.Gun castGun(Object a){
+        Equipment.Weapons.Gun ret = (Equipment.Weapons.Gun)a;
+        return ret;
+    }
+    public Equipment.Weapons.lance castLance(Object a){
+        Equipment.Weapons.lance ret = (Equipment.Weapons.lance)a;
+        return ret;
+    }
+    public Equipment.Weapons.Staff castStaff(Object a){
+        Equipment.Weapons.Staff ret = (Equipment.Weapons.Staff)a;
+        return ret;
+    }
     public class Equipment{
+        public static String[] getWeponNames(){
+            String[] ret = {"Sword", "Staff", "Bow", "Gun", "Staff", "lance"};
+            return ret;
+        }
+        public static String[] getArmourNames(){
+            String[] ret = {"Helmet", "chestPiece", "leggings", "boots"};
+            return ret;
+        }
+        public static String[] getAccNames(){
+            String[] ret = {"ring", "dagger", "armband"};
+            return ret;
+        }
         public static double getBonus(Prefixes p, materials m){
             double ret = 0.0;
             switch(p){
@@ -842,8 +892,13 @@ public class User {
                         System.out.println("this weapon is not equipped");
                     }
                 }
+                public DotType getDotType(){
+                    return this.dType;
+                }
+
             }
             public  class Gun{
+                
                 int ammo;
                 public enum type{
                     pistol, AR, SMG, machineGun, sniper;
@@ -853,7 +908,11 @@ public class User {
                 boolean equipped=false;
                 Prefixes prefix;
                 type type;
+                DotType dType;
                 materials material;
+                public DotType getDotType(){
+                    return this.dType;
+                }
                 public void addAmmo(int a){
                     this.ammo +=a;
                 }
@@ -947,9 +1006,13 @@ public class User {
                 boolean equipped = false;
                 String name;
                 Prefixes prefix;
+                DotType dType;
                 materials material;
                 public void addAmmo(int a){
                     this.ammo +=a;
+                }
+                public DotType getDotType(){
+                    return this.dType;
                 }
                 public Bow(){
                     this.equipped = false;
@@ -1029,6 +1092,10 @@ public class User {
                 String name;
                 Boolean equipped = false;
                 materials material;
+                DotType dType;
+                public DotType getDotType(){
+                    return this.dType;
+                }
                 public Staff(){
                     this.prefix = Prefixes.Broken;
                     this.material = materials.Wooden;
@@ -1114,6 +1181,10 @@ public class User {
                 String name;
                 Boolean equipped = false;
                 materials material;
+                DotType dType;
+                public DotType getDotType(){
+                    return this.dType;
+                }
                 public lance(){
                     this.prefix = Prefixes.Broken;
                     this.material = materials.Wooden;

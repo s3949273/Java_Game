@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
 /**
  *  Equipment: (equipment will have a boolean (equipped or not), another boolean correct class)
         - equipment.weapon.gun.pistol
@@ -195,7 +196,7 @@ import java.util.Scanner;
  * */
 
 public class Game{
-       public static final String filepath = "/Users/t/Desktop/coding/Java/game/Save.txt";
+       public static final String filepath = "/Users/t/Desktop/coding/Java/game/Java_Game/Save.txt";
        public static void mainMenu(User u){
               Scanner scnr = new Scanner(System.in);
               System.out.println("User: TinTanSan"+"\t\t\t\tLevel: "+u.get("level"));
@@ -261,14 +262,12 @@ public class Game{
               //mainMenu(user);
               User.Equipment equipment = user.new Equipment();
               User.Equipment.Weapons weapons = equipment.new Weapons();
-              User.Equipment.Weapons.Sword s = weapons.new Sword("Common Iron Sword");
+              User.Equipment.Weapons.Sword s = weapons.new Sword();
+              s.dType = User.DotType.BURN;
               s.equip();
               ArrayList<Object> AE = user.activeEquipment;
-              for(int i =0; i<AE.size(); i++){
-                     if(AE.get(i) instanceof User.Equipment.Weapons){
-                            System.out.println("hi");
-                     }
-              }
+              System.out.println(user.hasDOT());
+              user.fight(new Enemies("g", "Slime"));
        }
 
 }
