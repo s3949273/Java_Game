@@ -1,0 +1,1 @@
+{dodge=0.01, userClass=-1.0, mp=0.0, critChance=0.1, level=1.0, skillPoints=0.0, defence=0.0, critDamage=100.0, health=100.0, speed=10.0, ap=0.0, currentExp=0.0, money=0.0, attack=10.0, maxHealth=100.0, neededExp=50.0}
